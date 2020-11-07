@@ -6,16 +6,17 @@ def all_mock_ops():
     
     """
     Fallback function for returning all the mock ops
+    table_name: mock_ops
+    schema: <id int, name text, lat real, long real>
     """
     
     #list of data that we receive from front end
-    #ldat_received = ['ID', 'abbreviation', 'name', 'lat', 'long', 'didok_id']
     ldat_received = ('name', 'lat', 'long')
     
     
     # get the data
     #db_out = (db.get(mock_ops, ldat_received, filters = None))
-    rows = db.get(mock_ops, ldat_received)
+    rows = db.get('mock_ops', ldat_received)
     return [{'name':row[0], 'lat':row[1], 'long':row[2]} for row in rows]
     
     # convert the data 
@@ -29,6 +30,4 @@ def all_mock_ops():
 
     # return ret_list
 
-
-
-
+#ldat_received = ['ID', 'abbreviation', 'name', 'lat', 'long', 'didok_id']
