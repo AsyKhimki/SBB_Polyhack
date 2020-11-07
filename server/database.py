@@ -54,6 +54,7 @@ if __name__ == '__main__':
     ops = get('ops', ('id', 'abbr'))
     ops = {row[1]: row[0] for row in ops}
     id = 0
+    constr_ops_id = 0
     for element in constr_data:
         data = element['fields']
         if data.get('bp_to') is not None and data.get('bp_from') is not None:
@@ -61,22 +62,28 @@ if __name__ == '__main__':
                 constrs.append((id, data['region'], data.get('nom_du_project_projektbezeichnung'), 
                             data.get('bemerkungen'), data.get('date_from'), data.get('date_to'), data.get('weeks'), data.get('reduction_capacity'),
                             data.get('umsetzung_intervalltyp_umleitung')))
-                constrs_ops.append((id, id, data.get('bp_to'), data.get('bp_from')))
+                constrs_ops.append(((constr_ops_id, id, data.get('bp_from'), 0)))
+                constr_ops_id += 1
+                constrs_ops.append((constr_ops_id, id, data.get('bp_to'), 1))
                 id += 1
+                constr_ops_id += 1
     new_constrs_ops = []
     for op in constrs_ops:
-        new_constrs_ops.append((op[0], op[1], ops[op[2]], ops[op[3]]))
+        new_constrs_ops.append((op[0], op[1], ops[op[2]], op[3]))
     
+    constrs_ops = new_constrs_ops
     with DatabaseCursor(FILE) as cursor:
+        sql = ('DROP TABLE IF EXISTS constr_ops;')
+        cursor.execute(sql)
         sql = ("CREATE TABLE IF NOT EXISTS constr (id INT PRIMARY KEY, "
                "region TEXT, project TEXT, comments TEXT, date_from DATETIME, date_to DATETIME, weeks INT, red_cap REAL, type TEXT);")
         cursor.execute(sql)
         sql = ("CREATE INDEX IF NOT EXISTS dates ON constr(date_from, date_to);")
         cursor.execute(sql)
         sql = ("CREATE TABLE IF NOT EXISTS constr_ops (id INT PRIMARY KEY, "
-               "constr_id INT, op_from_id INT, op_to_id INT);")
+               "constr_id INT, op_id INT, sorting INT);")
         cursor.execute(sql)
         sql = ("INSERT OR IGNORE INTO constr (id, region, project, comments, date_from, date_to, weeks, red_cap, type) VALUES (?,?,?,?,?,?,?,?,?);")
         cursor.executemany(sql, constrs)
-        sql = ("INSERT OR IGNORE INTO constr_ops (id, constr_id, op_from_id, op_to_id) VALUES (?,?,?,?);")
+        sql = ("INSERT OR IGNORE INTO constr_ops (id, constr_id, op_id, sorting) VALUES (?,?,?,?);")
         cursor.executemany(sql, constrs_ops)
