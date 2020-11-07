@@ -17,6 +17,10 @@ def home():
 def all_ops():
     return jsonify(b_logic.all_mock_ops())
 
+@app.route('/alllines')
+def all_lines():
+    return jsonify(b_logic.all_lines())
+
 
 if __name__ == '__main__':
     app.run()
