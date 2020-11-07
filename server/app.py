@@ -27,6 +27,10 @@ def all_lines():
 def all_mock_ops():
     return jsonify(b_logic.all_mock_ops())
 
+@app.route('/allconstrs')
+def all_construction_sites():
+    return jsonify(b_logic.all_constructions())
+
 
 if __name__ == '__main__':
     app.run()
