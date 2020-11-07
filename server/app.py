@@ -15,7 +15,7 @@ def home():
 
 @app.route('/allops')
 def all_ops():
-    return jsonify(database.all_ops())
+    return jsonify(database.all_mock_ops())
 
 
 if __name__ == '__main__':
