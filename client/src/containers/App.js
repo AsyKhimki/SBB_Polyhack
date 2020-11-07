@@ -61,6 +61,7 @@ const App = () => {
     <Titlebar />
     <Navbar />
     <table width="100%">
+    <tbody>
       <tr>
         <td className="left-container"
         style={{backgroundColor:'#2F4989'}}>
@@ -71,16 +72,17 @@ const App = () => {
         <Map markers={markers} lines={lines} origin={origin}/>
         </td>
         <td>
-          <div className="info-container">
-        <Infobar num={1}/>
-        <Infobar num={2}/>
-        <Infobar num={3}/>
-        <Infobar num={4}/>
-        <Infobar num={5}/>
-        <Infobar num={6}/>
+          <div className="info-container" style={{backgroundColor:'#2F4989', width: "18rem"}}>
+              <Infobar num={1, "18rem"}/>
+              <Infobar num={2, "18rem"}/>
+              <Infobar num={3, "18rem"}/>
+              <Infobar num={4, "18rem"}/>
+              <Infobar num={5, "18rem"}/>
+              <Infobar num={6, "18rem"}/>
         </div>
         </td>
       </tr>     
+      </tbody>
       </table> 
     </div>
     }
