@@ -14,9 +14,10 @@ import ReactDOM from "react-dom";
 
 const App = () => {
   const [markers, setMarkers] = useState([{
-    lat: 51.505,
-    long: -0.09
+    lat: 47.372406,
+    long: 8.537606
   }]);
+  
   const [loading, setLoading] = useState(false);
 
   const fetchMarkers = async() => {
@@ -24,6 +25,7 @@ const App = () => {
       const response = await fetch("/allops");
       const data = await response.json();
       console.log("Fetch successful!");
+      console.log(data);
       setMarkers(data);
     } catch (err) {
       console.log("There was a problem with backend connection");
@@ -47,7 +49,6 @@ const App = () => {
       <tr>
         <td className="left-container"
         style={{backgroundColor:'#2F4989'}}>
-
         <MyForm />
         </td>
         <td className="map-container">
