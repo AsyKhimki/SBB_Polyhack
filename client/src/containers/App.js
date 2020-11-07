@@ -4,6 +4,8 @@ import {Map} from '../components/Map/MapboxMap';
 import {Titlebar} from '../components/Titlebar/Titlebar';
 import {Infobar} from '../components/Infobar/Infobar';
 import {Searchbar} from '../components/Searchbar/Searchbar';
+import {Navbar} from '../components/Navbar/Navbar';
+import {MyForm} from '../components/Form/Form';
 import React, { useState } from 'react';
 import ReactDOM from "react-dom";
 //import { Leaflet, Icon } from "leaflet";
@@ -40,9 +42,14 @@ const App = () => {
       {loading ? <div>Loading</div> : 
     <div>
     <Titlebar />
+    <Navbar />
     <table width="100%">
       <tr>
-        <td className="left-container"></td>
+        <td className="left-container"
+        style={{backgroundColor:'#2F4989'}}>
+
+        <MyForm />
+        </td>
         <td className="map-container">
         <Searchbar fetchMarkers={fetchData}/>
         <Map markers={markers}/>

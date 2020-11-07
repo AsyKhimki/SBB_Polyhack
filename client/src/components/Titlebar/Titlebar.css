@@ -1,3 +1,8 @@
 .titlebar {
   background-color: #e3f2fd !important;
+  margin : 2pt;
+  text-emphasis: true;
+  color: red;
+  text-align: center;
 }
+
