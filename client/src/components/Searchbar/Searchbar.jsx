@@ -3,8 +3,8 @@ import React, { useState } from "react";
 export const Searchbar = ({ fetchMarkers }) => {
   return (
     <div>
-      <nav className="navbar navbar-light m-2">
-        <form className="form-inline my-2 my-lg-0">
+      <nav className="navbar navbar-dark m-2" style={{border:"10pt"}}>
+        <form className="form-inline my-2 my-lg-0" style={{color: "black"}}>
           <input
             className="form-control mr-sm-2"
             type="search"
@@ -12,7 +12,8 @@ export const Searchbar = ({ fetchMarkers }) => {
             aria-label="Search"
           />
           <button
-            className="btn btn-outline-info my-2 my-sm-0"
+            className="btn btn-outline-info my-sm-0"
+            style={{color: "black"}}
             type="submit"
             onClick={fetchMarkers}
           >
@@ -24,7 +25,7 @@ export const Searchbar = ({ fetchMarkers }) => {
             value=""
             id="defaultCheck1"
           />
-          <label className="form-check-label" for="defaultCheck1">
+          <label className="form-check-label" for="defaultCheck1" style={{color: "black"}}>
             Show lines
           </label>
           <input

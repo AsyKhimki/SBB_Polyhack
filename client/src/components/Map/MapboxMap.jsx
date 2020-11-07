@@ -22,37 +22,9 @@ import { opacityById, weightById, colorById } from "./stylize_elements.js";
 });*/
 }
 
-/*
-const colorById = (id) => {
-  console.log("Line id");
-  console.log(id);
-  var res = parseInt(id) === 1 ? "red" : "blue";
-  console.log(res);
-  return res;
-}
 
-var highlight = {
-  'fillColor': 'yellow',
-  'weight': 2,
-  'opacity': 1
-};
 
-const  weightById = (id) =>{
-
-  var res = parseInt(id) === 1 ? 2 : 10;
-  console.log(res);
-  return res;
-}
-
-const opacityById= (id) =>{
-
-  var res = parseInt(id) === 1 ? 0.25 : 1;
-  console.log(res);
-  return res;
-}
-*/
-
-export const Map = ({ markers, lines, origin }) => {
+export const Map = ({ markers, lines, origin, setSite, setSiteInfo }) => {
   const sample_line = [
     {
       from_lat: "47.372406",
@@ -86,29 +58,50 @@ export const Map = ({ markers, lines, origin }) => {
 
   return (
     <div>
-      <MapContainer center={origin} zoom={7} scrollWheelZoom={true}>
+      <MapContainer center={origin} zoom={7} scrollWheelZoom={true} click={handleClick}>
         <TileLayer
           attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
           url="https://api.mapbox.com/styles/v1/beta-sheet/ckh6dba8002u21aob78yl7tep/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmV0YS1zaGVldCIsImEiOiJja2g2ZG5hN3QwYzlyMnJxY3hrYmtybHZqIn0.SEa-JVt3EsXaPGgx-4mnYA"
         />
 
         <div>
-          {" "}
+         
           {markers.map((marker) => {
-            console.log("printing");
+            //console.log("Print markers")
+            //console.log(markers);
             return (
               <Marker
                 position={[marker.lat, marker.long]}
                 className="my_marker"
-              >
+
+                eventHandlers={{
+                  click: (  ) => {
+                    console.log("Have been clicked")
+                    console.log(marker.name)
+                    setSite(marker.name)
+                    const test = markers.filter(x => x.name === marker.name);
+                    console.log("filter result")
+                    console.log(test)
+                    setSiteInfo(test[0])
+                    
+                  },
+                }}
+                >
+
+                <Circle
+                center={{ lat: marker.lat, lng: marker.long }}
+                fillColor="red"
+                radius={1000}
+                />
                 <Popup>
                   Operation point {marker.name} <br /> Tell me more.
                 </Popup>
               </Marker>
             );
-          })}{" "}
-        </div>
+          })}
 
+        </div>
+        
         <Marker position={[47.372406, 8.537606]}>
           <Popup>
             Welcome to Zurich. <br /> Easily customizable.
@@ -120,6 +113,7 @@ export const Map = ({ markers, lines, origin }) => {
         https://leafletjs.com/reference-1.7.1.html#path
         */}
 
+      {/*
         {sample_line.map(({ id, from_lat, from_long, to_lat, to_long }) => {
           return (
             <Polyline
@@ -132,15 +126,37 @@ export const Map = ({ markers, lines, origin }) => {
               weight={weightById(id)}
             />
           );
+        })}*/}
+
+          {lines.map(({ id, opFrom, opTo }) => {
+          return (
+            <Polyline
+              key={id}
+              positions={[
+                [opFrom.lat, opFrom.long],
+                [opTo.lat, opTo.long],
+              ]}
+              color={colorById(id)}
+              stroke={true}
+              opacity={opacityById(id)}
+              bubblingMouseEvents={false}
+              weight={weightById(id)}
+            />
+          );
         })}
+
 
         {/* Add new type of a marker
          */}
 
         <Marker
+          eventHandlers={{
+            click: () => {
+              console.log('marker clicked')
+            },
+          }}
           key={test_city.id}
           position={{ lat: 46.23636, lng: 6.139854 }}
-          onClick={handleClick}
         >
           <Popup>
             <span>
@@ -150,14 +166,14 @@ export const Map = ({ markers, lines, origin }) => {
               <br />
               {test_city.details}
               <br />
-
-              {/*
-                    {elem.vehicles_launched.map((elem, i) => {
-                      return ( <p key={i}>{elem}</p>)
-                    })} */}
             </span>
           </Popup>
           <Circle
+            eventHandlers={{
+              click: () => {
+                console.log('circle clicked')
+              },
+            }}
             center={{ lat: 46.23636, lng: 6.139854 }}
             fillColor="red"
             radius={1000}

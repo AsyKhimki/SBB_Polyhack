@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import { gridLayer } from "leaflet";
 import { gracefulify } from "graceful-fs";
 
-export const Titlebar = () => {
+export const Titlebar = ( {text} ) => {
 
   const mystyle = {
     backgroundColor: "Blue",
@@ -16,11 +16,10 @@ export const Titlebar = () => {
   return (
     <div>
       <nav className="navbar navbar-light bg-light titlebar" style={mystyle}>
-       <img src={sbb} alt="House image" height={100} width={400} />
-        <span className="navbar-brand mb-0 h1">Bottleneck!</span>
-        <img src={polyhack} alt="House image" height={100} width={400} />
-      </nav>
-      
+       <img src={sbb} alt="House image" height={70} width={300} />
+        <span className="navbar-brand mb-0 h1"> {text} </span>
+        <img src={polyhack} alt="House image" height={70} width={300} />
+      </nav>  
     </div>
   );
 };
