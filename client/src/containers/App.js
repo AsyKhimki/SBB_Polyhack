@@ -1,9 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
-import {Map} from './MapboxMap';
-import {Titlebar} from './Titlebar';
-import {Infobar} from './Infobar';
-import {Searchbar} from './Searchbar';
+import {Map} from '../components/Map/MapboxMap';
+import {Titlebar} from '../components/Titlebar/Titlebar';
+import {Infobar} from '../components/Infobar/Infobar';
+import {Searchbar} from '../components/Searchbar/Searchbar';
 import React, { useState } from 'react';
 import ReactDOM from "react-dom";
 //import { Leaflet, Icon } from "leaflet";
