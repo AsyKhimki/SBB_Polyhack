@@ -45,7 +45,38 @@ class DatabaseCursor:
 
 if __name__ == '__main__':
     import json
-    linie_file = Path('.') / 'data' / 'linie-mit-betriebspunkten.json'
-    with open(linie_file, mode='r') as read_file:
-        lines_data = json.load(read_file)
-    # print(lines_data[5]['fields'])
+    constr_file = Path('.') / 'data' / 'construction-site.json'
+    with open(constr_file, mode='r') as read_file:
+        constr_data = json.load(read_file)
+    print(constr_data[10]['fields'])
+    constrs = []
+    constrs_ops = []
+    ops = get('ops', ('id', 'abbr'))
+    ops = {row[1]: row[0] for row in ops}
+    id = 0
+    for element in constr_data:
+        data = element['fields']
+        if data.get('bp_to') is not None and data.get('bp_from') is not None:
+            if data.get('bp_to') in ops and data.get('bp_from') in ops:
+                constrs.append((id, data['region'], data.get('nom_du_project_projektbezeichnung'), 
+                            data.get('bemerkungen'), data.get('date_from'), data.get('date_to'), data.get('weeks'), data.get('reduction_capacity'),
+                            data.get('umsetzung_intervalltyp_umleitung')))
+                constrs_ops.append((id, id, data.get('bp_to'), data.get('bp_from')))
+                id += 1
+    new_constrs_ops = []
+    for op in constrs_ops:
+        new_constrs_ops.append((op[0], op[1], ops[op[2]], ops[op[3]]))
+    
+    with DatabaseCursor(FILE) as cursor:
+        sql = ("CREATE TABLE IF NOT EXISTS constr (id INT PRIMARY KEY, "
+               "region TEXT, project TEXT, comments TEXT, date_from DATETIME, date_to DATETIME, weeks INT, red_cap REAL, type TEXT);")
+        cursor.execute(sql)
+        sql = ("CREATE INDEX IF NOT EXISTS dates ON constr(date_from, date_to);")
+        cursor.execute(sql)
+        sql = ("CREATE TABLE IF NOT EXISTS constr_ops (id INT PRIMARY KEY, "
+               "constr_id INT, op_from_id INT, op_to_id INT);")
+        cursor.execute(sql)
+        sql = ("INSERT OR IGNORE INTO constr (id, region, project, comments, date_from, date_to, weeks, red_cap, type) VALUES (?,?,?,?,?,?,?,?,?);")
+        cursor.executemany(sql, constrs)
+        sql = ("INSERT OR IGNORE INTO constr_ops (id, constr_id, op_from_id, op_to_id) VALUES (?,?,?,?);")
+        cursor.executemany(sql, constrs_ops)
