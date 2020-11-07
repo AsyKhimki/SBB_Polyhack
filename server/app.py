@@ -3,7 +3,7 @@ import logging
 from logging import Formatter, FileHandler
 import os
 
-import database
+import b_logic
 
 app = Flask(__name__)
 
@@ -15,7 +15,7 @@ def home():
 
 @app.route('/allops')
 def all_ops():
-    return jsonify(database.all_mock_ops())
+    return jsonify(b_logic.all_mock_ops())
 
 
 if __name__ == '__main__':
