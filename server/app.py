@@ -15,11 +15,17 @@ def home():
 
 @app.route('/allops')
 def all_ops():
-    return jsonify(b_logic.all_mock_ops())
+    return jsonify(b_logic.all_ops())
+
 
 @app.route('/alllines')
 def all_lines():
     return jsonify(b_logic.all_lines())
+
+
+@app.route('/mockops')
+def all_mock_ops():
+    return jsonify(b_logic.all_mock_ops())
 
 
 if __name__ == '__main__':
