@@ -32,7 +32,7 @@ def all_ops():
 def all_lines():
     """dirty one for now"""
     rows = db.get('lines')
-    line_dict = {row[0]: {'name': row[1], 'admin': row[2], 'ops':[]} for row in rows}
+    line_dict = {row[0]: {'lnumber': row[0], 'name': row[1], 'admin': row[2], 'ops':[]} for row in rows}
     
     sql = 'SELECT line_id, op_id, km, abbr, name, lat, long, didok FROM ops INNER JOIN line_plan ON ops.id = line_plan.op_id ORDER BY line_id, km ASC;'
 
@@ -47,4 +47,4 @@ def all_lines():
                 'didok': row[7]
             }
         )
-    return line_dict
+    return [value for value in line_dict.values()]
