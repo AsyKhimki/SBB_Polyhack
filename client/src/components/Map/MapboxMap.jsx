@@ -8,8 +8,19 @@ import {
   TileLayer,
   Circle,
 } from "react-leaflet";
-import { opacityById, weightById, colorById, adjustSizeByDVW } from "./stylize_elements.js";
-import { MapLine, MapActiveLine, MapConstrLine, MapConstrPoint } from "./Line";
+import {
+  opacityById,
+  weightById,
+  colorById,
+  adjustSizeByDVW,
+} from "./stylize_elements.js";
+import {
+  MapLine,
+  MapActiveLine,
+  MapConstrLine,
+  MapConstrPoint,
+  MapProblemLine,
+} from "./Line";
 import { act } from "react-dom/test-utils";
 
 export const Map = ({
@@ -21,6 +32,7 @@ export const Map = ({
   setActiveLine,
   activeLine,
   construct,
+  problems,
   startDate,
   setNumcnst,
   showpo,
@@ -103,12 +115,55 @@ export const Map = ({
           </div>
         ) : null}
 
-        {
+        <div>
+          {stations
+            .filter((st) => {
+              return parseInt(st.fields.dwv) >= 200;
+            })
 
+            .map((station) => {
+              // console.log(station.fields)
+
+              var rad = adjustSizeByDVW(parseInt(station.fields.dwv));
+
+              return (
+                <Circle
+                  center={{
+                    lat: station.geometry.coordinates[1],
+                    lng: station.geometry.coordinates[0],
+                  }}
+                  fillColor="red"
+                  radius={rad}
+                >
+                  <Popup>
+                    <b>{station.fields.bahnhof_haltestelle} </b> <br />
+                    <p>No. of Passengers </p>
+                    <table>
+                      <tr>
+                        <td align="left">
+                          <b>Average</b>
+                        </td>
+
+                        <td align="right">{station.fields.dtv}</td>
+                      </tr>
+
+                      <tr>
+                        <td align="left">
+                          <b>Weekdays</b>
+                        </td>
+
+                        <td align="right"> {station.fields.dwv}</td>
+                      </tr>
+                    </table>
+                  </Popup>
+                </Circle>
+              );
+            })}
+        </div>
+
+        {
           <MapConstrLine
             construct={construct.filter((obj) => {
-
-
               var date_from = new Date(obj.date_from);
               var date_to = new Date(obj.date_to);
               //console.log(date_from.getTime() > startDate.getTime() );
@@ -125,89 +180,41 @@ export const Map = ({
           />
         }
 
-
-
-
-
-      
-            <div>
-            {stations.filter( (st) =>{
-              return parseInt(st.fields.dwv) >= 200
-            })
-            .map((station) => {
-              // console.log(station.fields)
-              var rad = adjustSizeByDVW(parseInt(station.fields.dwv));
-              return (
-                <Circle
-                  center={{ lat: station.geometry.coordinates[1], lng: station.geometry.coordinates[0]}}
-                  fillColor="red"
-                  radius={rad}
-                ><Popup>
-                <b>{station.fields.bahnhof_haltestelle} </b> <br /> 
-                <p>No. of Passengers </p>
-
-                <table>
-                  <tr>
-                    <td align="left"><b>Average</b></td>
-                    <td align="right">{station.fields.dtv}</td>
-                  </tr>
-                  <tr>
-                    <td align="left"><b>Weekdays</b></td>
-                    <td align="right"> {station.fields.dwv}</td>
-                  </tr>
-                </table>
-
-              </Popup>
-              </Circle>
-              );
-            })}
-          </div> 
-
-        {/*      <div>
-          {construct.filter( obj => {
+        {
+          <MapConstrPoint
+            construct={construct.filter((obj) => {
               var date_from = new Date(obj.date_from);
               var date_to = new Date(obj.date_to);
               //console.log(date_from.getTime() > startDate.getTime() );
-              var ans = date_from.getTime() <= startDate.getTime() && date_to.getTime() >= startDate.getTime()
-              cnt = ans ? cnt + 1 : cnt ;
+              var ans =
+                date_from.getTime() <= startDate.getTime() &&
+                date_to.getTime() >= startDate.getTime();
+              cnt = ans ? cnt + 1 : cnt;
               setNumcnst(cnt);
               //console.log("number of constructions")
               //console.log(cnt);
-              return ans
-          })
-          .map((cnst) => {
+              console.log(ans);
+              return ans;
+            })}
+          />
+        }
 
-            return (
-              <Polyline
-                
-                positions={[
-                  [cnst.ops[0].lat, cnst.ops[0].long],
-                  [cnst.ops[1].lat, cnst.ops[1].long],
-                ]}
-                color={"red"}
-                stroke={true}
-                opacity={0.25}
-                bubblingMouseEvents={false}
-                weight={10}
-              />
-            );
-
-            
+        <MapProblemLine
+          line={problems.filter((obj) => {
+            var date_from = new Date(obj.date_from);
+            var date_to = new Date(obj.date_to);
+            //console.log(date_from.getTime() > startDate.getTime() );
+            var ans =
+              date_from.getTime() <= startDate.getTime() &&
+              date_to.getTime() >= startDate.getTime();
+            cnt = ans ? cnt + 1 : cnt;
+            setNumcnst(cnt);
+            //console.log("number of constructions")
+            //console.log(cnt);
+            console.log(ans);
+            return ans;
           })}
-
-        </div> */}
-
-        {/*
-        <Marker position={[47.372406, 8.537606]}>
-          <Popup>
-            Welcome to Zurich. <br /> Easily customizable.
-          </Popup>
-        </Marker> */}
-
-        {/* TRY out polylines 
-        see properties
-        https://leafletjs.com/reference-1.7.1.html#path
-        */}
+        />
 
         <MapLine
           lines={lines}
@@ -216,41 +223,6 @@ export const Map = ({
         />
 
         {activeLine && <MapActiveLine activeLine={activeLine} />}
-
-        {/* Add new type of a marker
-         */}
-
-        {/*
-        <Marker
-          eventHandlers={{
-            click: () => {
-              console.log("marker clicked");
-            },
-          }}
-          key={test_city.id}
-          position={{ lat: 46.23636, lng: 6.139854 }}
-        >
-          <Popup>
-            <span>
-              {test_city.full_name}
-              <br />
-              {test_city.status}
-              <br />
-              {test_city.details}
-              <br />
-            </span>
-          </Popup>
-          <Circle
-            eventHandlers={{
-              click: () => {
-                console.log("circle clicked");
-              },
-            }}
-            center={{ lat: 46.23636, lng: 6.139854 }}
-            fillColor="red"
-            radius={1000}
-          />
-          </Marker> */}
       </MapContainer>
     </div>
   );

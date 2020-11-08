@@ -54,6 +54,28 @@ export const MapActiveLine = ({ activeLine }) => {
   );
 };
 
+export const MapProblemLine = ({ line }) => {
+  return (
+    <div>
+      {line.map(({ ops }) => {
+        return (
+          <Polyline
+            positions={[
+              [ops[0].lat, ops[0].long],
+              [ops[1].lat, ops[1].long],
+            ]}
+            color={"black"}
+            stroke={true}
+            opacity={1}
+            bubblingMouseEvents={false}
+            weight={10}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
 export const MapConstrLine = ({ construct }) => {
   return (
     <div>
@@ -84,22 +106,15 @@ export const MapConstrPoint = ({ construct }) => {
   return (
     <div>
       {construct.map(({ operatingPoints }) =>
-        operatingPoints.map(({ point }) =>
-          point.map((pt) => {
-            return (
-              <Circle
-                eventHandlers={{
-                  click: () => {
-                    console.log("circle clicked");
-                  },
-                }}
-                center={{ lat: pt.lat, lng: pt.long }}
-                fillColor="red"
-                radius={1000}
-              />
-            );
-          })
-        )
+        operatingPoints.map(({ point }) => {
+          return (
+            <Circle
+              center={{ lat: point.lat, lng: point.long }}
+              fillColor="red"
+              radius={3000}
+            />
+          );
+        })
       )}
     </div>
   );
