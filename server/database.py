@@ -31,7 +31,7 @@ class DatabaseCursor:
         self.host = host
 
     def __enter__(self):
-        self.connection = sqlite3.connect(str(self.host))
+        self.connection = sqlite3.connect(self.host)
         self.cursor = self.connection.cursor()
         return self.cursor
 

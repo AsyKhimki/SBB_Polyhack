@@ -216,4 +216,5 @@ with db.DatabaseCursor(FILE) as cursor:
     cursor.execute(sql)
     pz_id, pz_ops_id = insert_problem_zones(cursor, 'Personenwagen', problemStationPairListPerson, 0, 0)
     pz_id, pz_ops_id = insert_problem_zones(cursor, 'Umsetzung', problemStationPairListUmsetzung, pz_id, pz_ops_id)
+    pz_id, pz_ops_id = insert_problem_zones(cursor, 'AccumulatedLineDelay', problemStationPairListAccumulateFinal, pz_id, pz_ops_id)
     
