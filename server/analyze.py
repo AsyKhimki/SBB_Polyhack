@@ -25,8 +25,8 @@ def all_constructions():
 def all_bp_von():
     return db.get('capacities', ('id', 'direction', 'train_type', 'train_number', 'op_from_id', 'op_to_id'))
 
-def query_bp_von_person(constructionFromId):
-    sql = f'SELECT id, direction, train_type, train_number, op_from_id, op_to_id FROM capacities WHERE op_from_id = {constructionFromId} AND train_type = "PERSONENVERKEHR" '
+def query_bp_von(constructionFromId):
+    sql = f'SELECT id, direction, train_type, train_number, op_from_id, op_to_id FROM capacities WHERE op_from_id = {constructionFromId}'
     rows = db.join_get(sql)
     return rows
 
@@ -73,7 +73,7 @@ for constructionInfo in constructionInfoList:
     if constructionPeriod == 'Umleitung':
         continue
 
-    capacityInfoList = query_bp_von_person(constructionFrom)
+    capacityInfoList = query_bp_von(constructionFrom)
     if not capacityInfoList: continue
 
     # Umsetzung
