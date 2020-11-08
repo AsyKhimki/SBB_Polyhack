@@ -25,6 +25,7 @@ export const Map = ({
   setNumcnst,
   showpo,
   stations,
+  showsta,
 }) => {
   const sample_line = [
     {
@@ -126,33 +127,41 @@ export const Map = ({
 
 
 
+
+
+      
             <div>
             {stations.filter( (st) =>{
               return parseInt(st.fields.dwv) >= 200
             })
             .map((station) => {
-              console.log(station.fields.dwv)
+              // console.log(station.fields)
               var rad = adjustSizeByDVW(parseInt(station.fields.dwv));
               return (
                 <Circle
                   center={{ lat: station.geometry.coordinates[1], lng: station.geometry.coordinates[0]}}
                   fillColor="red"
                   radius={rad}
-                  eventHandlers={{
-                    click: () => {
-                      // console.log("Circle Has been clicked")
+                ><Popup>
+                <b>{station.fields.bahnhof_haltestelle} </b> <br /> 
+                <p>No. of Passengers </p>
 
-                      //setSite(marker.name);
-                      const test = station.filter(
-                        (x) => x.name === station.name
-                      );
-                      setSiteInfo(test[0]);
-                    },
-                  }}
-                />
+                <table>
+                  <tr>
+                    <td align="left"><b>Average</b></td>
+                    <td align="right">{station.fields.dtv}</td>
+                  </tr>
+                  <tr>
+                    <td align="left"><b>Weekdays</b></td>
+                    <td align="right"> {station.fields.dwv}</td>
+                  </tr>
+                </table>
+
+              </Popup>
+              </Circle>
               );
             })}
-          </div>
+          </div> 
 
         {/*      <div>
           {construct.filter( obj => {

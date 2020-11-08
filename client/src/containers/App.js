@@ -29,6 +29,7 @@ const App = () => {
   const [siteInfo, setSiteInfo] = useState({date_from: "2017-06-30", date_to: "2027-12-30", cap_red: "0.25", type:"none"});
   const [activeLine, setActiveLine] = useState(undefined);
   const [showpo, setShowpo] = useState(false);
+  const [showstat, setShowstat] = useState(true);
 
 // for now we're fetching the same data twice - the idea is to fetch markers 
 // from one route and the lines from another
@@ -98,11 +99,6 @@ const fetchLines = async() => {
    DNWV = Durchschnittlicher nicht-werktäglicher Verkehr (Samstage, Sonntage, Feiertage) im 2018.
     */
 
-    console.log(data.records);
-    console.log(data.records[0].fields.dwv)
-    //console.log(data.recorcs[0].geometry.coordinates[0])
-    console.log(data.records[0].geometry.coordinates[0])
-    console.log(data.records[0].geometry.coordinates[1])
     setStations(data.records);
   } catch (err) {
     console.log("There was a problem with API connection");
@@ -182,9 +178,9 @@ const fetchLines = async() => {
       </Col>*/}
 
         <Col className="map-container" xs={7.8} style={{backgroundColor:"#e62b19"}}>
-        <Searchbar fetchMarkers={fetchData} startDate={startDate} setStartDate={setStartDate} numcnst={numcnst} showpo={showpo} setShowpo={setShowpo} style={{color: "black"}}/>
+        <Searchbar fetchMarkers={fetchData} startDate={startDate} setStartDate={setStartDate} numcnst={numcnst} showpo={showpo} setShowpo={setShowpo} showstat={showstat} setShowstat={setShowstat} style={{color: "black"}}/>
         <Map markers={markers} lines={lines} origin={origin} setSite={setSite}  setSiteInfo={setSiteInfo} setActiveLine={setActiveLine} activeLine={activeLine} construct={construct} startDate={startDate} setNumcnst={setNumcnst} showpo={showpo}
-        stations={stations} style={{width: "100%"}}/>
+        stations={stations} showstat={showstat} style={{width: "100%"}}/>
         </Col>
 
         <Col xs={3.2} style={{backgroundColor:'#2F4989'}}>

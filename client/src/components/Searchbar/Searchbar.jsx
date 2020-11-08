@@ -9,13 +9,23 @@ export const Searchbar =
     setStartDate, 
     numcnst, 
     showpo,
-    setShowpo,  }) => {
+    setShowpo, 
+    showstat,
+    setShowstat,  }) => {
 
 
   const handleInputChange = (event) => {
     const target = event.target;
     setShowpo(target.checked);
   };
+
+  const handleStatChange = (event) => {
+    const target = event.target;
+    console.log("Statistics")
+    console.log(target.checked);
+    setShowstat(target.checked);
+
+  }
 
   return (
     <div>
@@ -66,12 +76,23 @@ export const Searchbar =
             id="defaultCheck1"
           />*/}
           <label className="form-check-label" for="defaultCheck1">
-            Number of construction at the current date{numcnst}
+            Number of construction at the current date: <b color="white">{numcnst}</b>
           </label>
         
       </nav>
 
       <nav className="navbar navbar-dark m-2">
+
+          <label className="form-check-label" for="defaultCheck1" style={{color: "black"}}>
+            Show stations
+            <input
+              className="form-check-input m-2"
+              type="checkbox"
+              value={showstat}
+              onChange={handleStatChange}
+              id="defaultCheck1"
+          />
+          </label>
 
           <label className="form-check-label" for="defaultCheck1" style={{color: "black"}}>
             Show operation points
@@ -83,6 +104,7 @@ export const Searchbar =
               id="defaultCheck1"
           />
           </label>
+
         </nav>
 
     </div>
