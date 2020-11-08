@@ -16,7 +16,9 @@ To start the application please follow these steps
 
 1. Open the first tab in the root directory and run
 
-```shell python server/app.py```
+```shell 
+python server/app.py
+```
 
 2. Open the second tab in the root directory and run
 ```shell
