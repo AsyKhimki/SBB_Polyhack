@@ -162,3 +162,6 @@ for constructionInfo in constructionInfoList:
             if delayTime >= 3:
                 problemStationPairListPerson.append((key[0],key[1],constructionTimeFrom,constructionTimeTo))
 
+print(problemStationPairListPerson)
+print(problemStationPairListGood)
+print(problemStationPairListUmsetzung)
