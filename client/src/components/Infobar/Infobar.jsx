@@ -13,25 +13,25 @@ export const Infobar = ({ site_info } ) => {
           <h5 className="card-title">Construction site {site_info.name}</h5>
 
           
-          <table style={{width:"14rem"}}>
+          <table style={{width:"13rem"}}>
             <tr>
-              <td>From:</td>
-              <td>{site_info.date_from}</td>
+              <td align="left">From:</td>
+              <td align="right">{site_info.date_from}</td>
             </tr>
 
             <tr>
-              <td>To:</td>
-              <td>{site_info.date_to}</td>
+              <td align="left">To:</td>
+              <td align="right">{site_info.date_to}</td>
             </tr>
 
             <tr>
-              <td>Capacity:</td>
-              <td>{site_info.cap_red}</td>
+              <td align="left">Capacity:</td>
+              <td align="right">{site_info.cap_red}</td>
             </tr>
 
             <tr>
-              <td>Type:</td>
-              <td>{site_info.type}</td>
+              <td align="left">Type:</td>
+              <td align="right">{site_info.type}</td>
             </tr>
 
           </table>

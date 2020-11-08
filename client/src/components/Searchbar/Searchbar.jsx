@@ -66,7 +66,7 @@ export const Searchbar =
             id="defaultCheck1"
           />*/}
           <label className="form-check-label" for="defaultCheck1">
-            Number of construction sites {numcnst}
+            Number of construction at the current date{numcnst}
           </label>
         
       </nav>

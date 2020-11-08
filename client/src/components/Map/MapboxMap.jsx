@@ -154,11 +154,12 @@ export const Map = ({
 
         </div> */}
 
+        {/*
         <Marker position={[47.372406, 8.537606]}>
           <Popup>
             Welcome to Zurich. <br /> Easily customizable.
           </Popup>
-        </Marker>
+        </Marker> */}
 
         {/* TRY out polylines 
         see properties
@@ -176,6 +177,7 @@ export const Map = ({
         {/* Add new type of a marker
          */}
 
+        {/*
         <Marker
           eventHandlers={{
             click: () => {
@@ -205,7 +207,7 @@ export const Map = ({
             fillColor="red"
             radius={1000}
           />
-        </Marker>
+          </Marker> */}
       </MapContainer>
     </div>
   );
