@@ -22,6 +22,7 @@ const App = () => {
   const [ops, setOps] = useState([]); // raw data from backend - to be removed later
   const [site, setSite] = useState("1");
   const [siteInfo, setSiteInfo] = useState({'lat': 47.372406, 'long': 8.537606});
+  const [activeLine, setActiveLine] = useState(undefined);
 
 // for now we're fetching the same data twice - the idea is to fetch markers 
 // from one route and the lines from another
@@ -92,14 +93,13 @@ const fetchLines = async() => {
 
   const fetchData = async() => {
     setLoading(true);
-    await fetchMarkers();
+    //await fetchMarkers();
     await fetchLines();
     setLoading(false)
     const test = markers.filter(marker => marker.name === site);
     console.log("Test filter")
     console.log(test)
   }
-  
   
 
   return ( 
@@ -114,12 +114,11 @@ const fetchLines = async() => {
        <Col className="left-container"
         xs={2}
         style={{backgroundColor:'#2F4989'}}>
-        <MyForm />
         </Col>
 
         <Col className="map-container" xs={7.8} style={{backgroundColor:"#e62b19"}}>
         <Searchbar fetchMarkers={fetchData} style={{color: "black"}}/>
-        <Map markers={markers} lines={lines} origin={origin} setSite={setSite} setSiteInfo={setSiteInfo}  style={{width: "100%"}}/>
+        <Map markers={markers} lines={lines} origin={origin} setSite={setSite} setSiteInfo={setSiteInfo} setActiveLine={setActiveLine} activeLine={activeLine} style={{width: "100%"}}/>
         </Col>
 
         <Col xs={2} style={{backgroundColor:'#2F4989'}}>
