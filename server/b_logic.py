@@ -74,7 +74,7 @@ def all_problem_zones():
     """dirty one for now"""
     rows = db.get('problem_zones', ('id', 'type', 'date_from', 'date_to'))
     problem_dict = {row[0]: {'type': row[1], 'date_from': row[2], 'date_to': row[3], 'ops': []} for row in rows}
-    sql = 'SELECT problem_zone_id, abbr, name, lat, long, didok, sorting FROM ops INNER JOIN ops_problem_zones ON ops.id = ops_problem_zones.op_id ORDER BY problem_zone_id, sorting;'
+    sql = 'SELECT problem_zone_id, op_id, abbr, name, lat, long, didok, sorting FROM ops INNER JOIN ops_problem_zones ON ops.id = ops_problem_zones.op_id ORDER BY problem_zone_id, sorting;'
 
     rows = db.join_get(sql)
     for row in rows:
