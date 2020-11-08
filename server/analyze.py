@@ -132,9 +132,9 @@ for constructionInfo in constructionInfoList:
         if delayTime >= 3:
             problemStationPairListGood.append((key[0],key[1],constructionTimeFrom,constructionTimeTo))
         
-        # MODIFICATION BY MAXIM
-        # make the list empty as you count for it in the second list
-        problemStationPairListGood = []
+    # MODIFICATION BY MAXIM
+    # make the list empty as you count for it in the second list
+    problemStationPairListGood = []
             
     # person train
     if ('24' in constructionPeriod or 'Tag' in constructionPeriod):
@@ -203,8 +203,5 @@ with db.DatabaseCursor(FILE) as cursor:
            "problem_zone_id INT, op_id INT, sorting INT)")
     cursor.execute(sql)
     pz_id, pz_ops_id = insert_problem_zones(cursor, 'Personenwagen', problemStationPairListPerson, 0, 0)
-    print(pz_id)
-    pz_id, pz_ops_id = insert_problem_zones(cursor, 'Gueterwagen', problemStationPairListGood, pz_id, pz_ops_id)
-    print(pz_id)
     pz_id, pz_ops_id = insert_problem_zones(cursor, 'Umsetzung', problemStationPairListUmsetzung, pz_id, pz_ops_id)
     
