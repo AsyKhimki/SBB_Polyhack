@@ -198,19 +198,21 @@ const fetchLines = async() => {
         style={{backgroundColor:'#2F4989'}}>
       </Col>*/}
 
-        <Col className="map-container" xs={7.8} style={{backgroundColor:"#2d327d"}}>
+        <Col className="map-container" style={{backgroundColor:"#2d327d", width: "auto"}}>
         <Searchbar fetchMarkers={fetchData} startDate={startDate} setStartDate={setStartDate} numcnst={numcnst} showpo={showpo} setShowpo={setShowpo} showstat={showstat} setShowstat={setShowstat} style={{color: "black"}}/>
         <Map markers={markers} lines={lines} origin={origin} setSite={setSite}  setSiteInfo={setSiteInfo} setActiveLine={setActiveLine} activeLine={activeLine} construct={construct} problems={problems} startDate={startDate} setNumcnst={setNumcnst} showpo={showpo}
-        stations={stations} showstat={showstat} style={{width: "100%"}}/>
+        stations={stations} showstat={showstat} 
+        style={{width: "100%"}}
+        />
         </Col>
 
-        <Col xs={3.2} style={{backgroundColor:'#EB0000'}}>
+        <Col xs={4} style={{backgroundColor:'#EB0000'}}>
           
           <div className="info-container">
-          <h2><font color="white"><b>Current construction sites</b></font></h2>
+          <h2 style={{marginTop:'16px'}}><font color="white"><b>Current construction sites</b></font></h2>
               
              
-              <Infobars construct={construct} startDate={startDate}/>
+              <Infobars construct={construct} startDate={startDate} style={{minWidth:"20rem"}}/>
               {/*<Infobar num={3, "18rem"}/>
               <Infobar site_info={siteInfo}  />
               <Infobar num={4, "18rem"}/>

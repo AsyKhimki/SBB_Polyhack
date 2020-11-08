@@ -6,12 +6,13 @@ export const Infobar = ({ site_info }) => {
 
   return (
     <div>
-      <div className="card m-4" style={{ width: "20rem" }}>
+      <div className="card m-4" 
+      style={{ width: "18rem",justifyContent: 'center', alignItems: 'center'}}>
         <img class="card-img-top" src={sbb_train} alt="Card image cap" />
         <div className="card-body">
           <h5 className="card-title">{site_info.name}</h5>
 
-          <table style={{ width: "18rem" }}>
+          <table style={{ width: "100%" }}>
             <tr>
               <td align="left">
                 <b>From:</b>
