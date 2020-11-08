@@ -8,7 +8,7 @@ import {
   TileLayer,
   Circle,
 } from "react-leaflet";
-import { opacityById, weightById, colorById } from "./stylize_elements.js";
+import { opacityById, weightById, colorById, adjustSizeByDVW } from "./stylize_elements.js";
 import { MapLine, MapActiveLine, MapConstrLine, MapConstrPoint } from "./Line";
 import { act } from "react-dom/test-utils";
 
@@ -24,6 +24,7 @@ export const Map = ({
   startDate,
   setNumcnst,
   showpo,
+  stations,
 }) => {
   const sample_line = [
     {
@@ -102,8 +103,11 @@ export const Map = ({
         ) : null}
 
         {
+
           <MapConstrLine
             construct={construct.filter((obj) => {
+
+
               var date_from = new Date(obj.date_from);
               var date_to = new Date(obj.date_to);
               //console.log(date_from.getTime() > startDate.getTime() );
@@ -119,6 +123,36 @@ export const Map = ({
             })}
           />
         }
+
+
+
+            <div>
+            {stations.filter( (st) =>{
+              return parseInt(st.fields.dwv) >= 200
+            })
+            .map((station) => {
+              console.log(station.fields.dwv)
+              var rad = adjustSizeByDVW(parseInt(station.fields.dwv));
+              return (
+                <Circle
+                  center={{ lat: station.geometry.coordinates[1], lng: station.geometry.coordinates[0]}}
+                  fillColor="red"
+                  radius={rad}
+                  eventHandlers={{
+                    click: () => {
+                      // console.log("Circle Has been clicked")
+
+                      //setSite(marker.name);
+                      const test = station.filter(
+                        (x) => x.name === station.name
+                      );
+                      setSiteInfo(test[0]);
+                    },
+                  }}
+                />
+              );
+            })}
+          </div>
 
         {/*      <div>
           {construct.filter( obj => {

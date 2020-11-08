@@ -10,7 +10,7 @@ export const Infobar = ({ site_info } ) => {
       <div className="card m-4" style={{width: "15rem"}}>
        <img class="card-img-top" src={sbb_train} alt="Card image cap"/>
         <div className="card-body">
-          <h5 className="card-title">Construction site {site_info.name}</h5>
+          <h5 className="card-title">{site_info.name}</h5>
 
           
           <table style={{width:"13rem"}}>

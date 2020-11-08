@@ -21,6 +21,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [lines, setLines] = useState([]);
   const [construct, setConstruct] = useState([]);
+  const [stations, setStations] = useState([]);
   const [numcnst, setNumcnst] = useState(0);
   const [ops, setOps] = useState([]); // raw data from backend - to be removed later
   const [site, setSite] = useState("1");
@@ -83,6 +84,33 @@ const fetchLines = async() => {
     }
   }
 
+  const fecthStations = async() => {
+
+  try {
+    var address = 'https://data.sbb.ch/api/records/1.0/search/?dataset=passagierfrequenz&q=&rows=906&sort=bahnhof_haltestelle&facet=code&facet=bezugsjahr&facet=eigner&facet=dtv&facet=dwv&facet=dnwv'
+    const response = await fetch( address );
+    const data = await response.json();
+    console.log("FETCHING API SUCCESSFUL");
+
+   /*
+   DTV = Durchschnittlicher täglicher Verkehr (Montag bis Sonntag) im 2018.
+   DWV = Durchschnittlicher werktäglicher Verkehr (Montag bis Freitag) im 2018.
+   DNWV = Durchschnittlicher nicht-werktäglicher Verkehr (Samstage, Sonntage, Feiertage) im 2018.
+    */
+
+    console.log(data.records);
+    console.log(data.records[0].fields.dwv)
+    //console.log(data.recorcs[0].geometry.coordinates[0])
+    console.log(data.records[0].geometry.coordinates[0])
+    console.log(data.records[0].geometry.coordinates[1])
+    setStations(data.records);
+  } catch (err) {
+    console.log("There was a problem with API connection");
+    return;
+  }
+
+  }
+
   const fetchConstruction = async(points, lines) => {
     try {
       const response = await fetch("/allconstrs");
@@ -132,6 +160,7 @@ const fetchLines = async() => {
     setLoading(true);
     await fetchMarkers();
     await fetchLines();
+    await fecthStations();
     setLoading(false)
 
   }
@@ -154,7 +183,8 @@ const fetchLines = async() => {
 
         <Col className="map-container" xs={7.8} style={{backgroundColor:"#e62b19"}}>
         <Searchbar fetchMarkers={fetchData} startDate={startDate} setStartDate={setStartDate} numcnst={numcnst} showpo={showpo} setShowpo={setShowpo} style={{color: "black"}}/>
-        <Map markers={markers} lines={lines} origin={origin} setSite={setSite}  setSiteInfo={setSiteInfo} setActiveLine={setActiveLine} activeLine={activeLine} construct={construct} startDate={startDate} setNumcnst={setNumcnst} showpo={showpo} style={{width: "100%"}}/>
+        <Map markers={markers} lines={lines} origin={origin} setSite={setSite}  setSiteInfo={setSiteInfo} setActiveLine={setActiveLine} activeLine={activeLine} construct={construct} startDate={startDate} setNumcnst={setNumcnst} showpo={showpo}
+        stations={stations} style={{width: "100%"}}/>
         </Col>
 
         <Col xs={3.2} style={{backgroundColor:'#2F4989'}}>
