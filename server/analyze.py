@@ -53,6 +53,7 @@ constructionInfoList = all_constructions()
 # (id_from, id_to, time_start, time_finish)
 problemStationPairListPerson = []
 problemStationPairListGood = []
+problemStationPairListUmsetzung = []
 
 for constructionInfo in constructionInfoList:
     constructionFrom = constructionInfo['op_from_id']
@@ -62,17 +63,43 @@ for constructionInfo in constructionInfoList:
     constructionPeriod = constructionInfo['type']
     reducedCapacity = constructionInfo['cap_red']
 
+    dPerson = {}
+    dGood = {}
+    dUmsetzung = {}
+
     # ignored cases
     if constructionPeriod is None: continue
     # leave 'Umsetzung' for now
-    if constructionPeriod == 'Umleitung' or constructionPeriod == 'Umsetzung':
+    if constructionPeriod == 'Umleitung':
         continue
 
     capacityInfoList = query_bp_von_person(constructionFrom)
     if not capacityInfoList: continue
 
-    dPerson = {}
-    dGood = {}
+    # Umsetzung
+    if constructionPeriod == 'Umsetzung':
+        for capacityInfo in capacityInfoList:
+            if (constructionFrom ,capacityInfo[-1]) not in dUmsetzung:
+                dUmsetzung[(constructionFrom ,capacityInfo[-1])] = capacityInfo[3]
+            else:
+                dUmsetzung[(constructionFrom ,capacityInfo[-1])] += capacityInfo[3]
+        # check align here
+        # find lines that the construction goes through
+        lineID = query_lines(constructionFrom, constructionTo)
+        if lineID is None:
+            continue
+        # check if dictionary values are aligned, if not, delete corresponding entries
+        allStationsOnLine = query_op_on_lines(lineID)
+        index1 = allStationsOnLine.index((constructionFrom,))
+        index2 = allStationsOnLine.index((constructionTo,))
+        for key in list(dUmsetzung):
+            if (key[1],) not in allStationsOnLine[index1:index2]:
+                del dUmsetzung[key]
+        # no need computation
+        for key in list(dUmsetzung):
+            problemStationPairListUmsetzung.append((key[0],key[1],constructionTimeFrom,constructionTimeTo))
+        continue
+
     # Good 
     for capacityInfo in capacityInfoList:
         if (constructionFrom ,capacityInfo[-1]) not in dGood:
@@ -104,7 +131,7 @@ for constructionInfo in constructionInfoList:
         delayTime = (1/newCap - 1/oldCap) * 60
         if delayTime >= 3:
             problemStationPairListGood.append((key[0],key[1],constructionTimeFrom,constructionTimeTo))
-            
+
     # person train
     if ('24' in constructionPeriod or 'Tag' in constructionPeriod):
         for capacityInfo in capacityInfoList:
