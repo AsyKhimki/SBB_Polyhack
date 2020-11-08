@@ -11,12 +11,20 @@ export const Infobar = ({ num, site_info } ) => {
        <img class="card-img-top" src={sbb_train} alt="Card image cap"/>
         <div className="card-body">
           <h5 className="card-title">Construction site # {site_info.name}</h5>
-          <h6 className="card-subtitle mb-2 text-muted">Construction site</h6>
+
           
-          <p className="card-text">
-              Latitude: {site_info.lat} </p> 
-          <p className="card-text"> Longitude: {site_info.long}
-            </p>
+          <table style={{width:"13rem"}}>
+            <tr>
+              <td>Latitude:</td>
+              <td>{site_info.lat.toFixed(3)}</td>
+            </tr>
+
+            <tr>
+              <td>Longitude:</td>
+              <td>{site_info.long.toFixed(3)}</td>
+            </tr>
+          </table>
+          
         </div>
       </div>
     </div>

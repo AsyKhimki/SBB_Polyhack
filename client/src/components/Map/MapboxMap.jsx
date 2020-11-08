@@ -12,17 +12,6 @@ import { opacityById, weightById, colorById } from "./stylize_elements.js";
 import { MapLine, MapActiveLine } from "./Line";
 import { act } from "react-dom/test-utils";
 
-{
-  /*var greenIcon = icon({
-  iconUrl: 'test_icon.png',
-
-  iconSize:     [38, 95], // size of the icon
-  shadowSize:   [50, 64], // size of the shadow
-  iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-  shadowAnchor: [4, 62],  // the same for the shadow
-  popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-});*/
-}
 
 export const Map = ({
   markers,
@@ -32,6 +21,7 @@ export const Map = ({
   setSiteInfo,
   setActiveLine,
   activeLine,
+  construct,
 }) => {
   const sample_line = [
     {
@@ -77,34 +67,60 @@ export const Map = ({
           url="https://api.mapbox.com/styles/v1/beta-sheet/ckh6dba8002u21aob78yl7tep/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmV0YS1zaGVldCIsImEiOiJja2g2ZG5hN3QwYzlyMnJxY3hrYmtybHZqIn0.SEa-JVt3EsXaPGgx-4mnYA"
         />
 
-        <div>
+          <div>
           {markers.map((marker) => {
-            //console.log("Print markers")
-            //console.log(markers);
-            return (
-              <Marker
-                position={[marker.lat, marker.long]}
-                className="my_marker"
+
+            return(
+              <Circle
+                center={{ lat: marker.lat, lng: marker.long }}
+                fillColor="green"
+                radius={1000}
+
                 eventHandlers={{
-                  click: () => {
-                    setSite(marker.name);
-                    const test = markers.filter((x) => x.name === marker.name);
-                    setSiteInfo(test[0]);
+                  click: (  ) => {
+                    // console.log("Circle Has been clicked")
+                    console.log("Print lines")
+                    console.log(lines)
+                    console.log("Print construction sites")
+                    console.log(construct)
+                    setSite(marker.name)
+                    const test = markers.filter(x => x.name === marker.name);
+                    setSiteInfo(test[0])
                   },
                 }}
-              >
-                <Circle
-                  center={{ lat: marker.lat, lng: marker.long }}
-                  fillColor="red"
-                  radius={1000}
                 />
-                <Popup>
-                  Operation point {marker.name} <br /> Tell me more.
-                </Popup>
-              </Marker>
             );
           })}
+
         </div>
+
+        <div>
+          {construct.map((cnst) => {
+
+            console.log("Construction latitude");
+            console.log(cnst.ops[0].lat);
+            console.log(cnst)
+
+            return (
+              <Polyline
+                
+                positions={[
+                  [cnst.ops[0].lat, cnst.ops[0].long],
+                  [cnst.ops[1].lat, cnst.ops[1].long],
+                ]}
+                color={"red"}
+                stroke={true}
+                opacity={0.25}
+                bubblingMouseEvents={false}
+                weight={10}
+              />
+            );
+
+            
+          })}
+
+        </div>
+
 
         <Marker position={[47.372406, 8.537606]}>
           <Popup>

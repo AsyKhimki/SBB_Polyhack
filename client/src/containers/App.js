@@ -19,6 +19,7 @@ const App = () => {
   const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [lines, setLines] = useState([]);
+  const [construct, setConstruct] = useState([]);
   const [ops, setOps] = useState([]); // raw data from backend - to be removed later
   const [site, setSite] = useState("1");
   const [siteInfo, setSiteInfo] = useState({'lat': 47.372406, 'long': 8.537606});
@@ -27,21 +28,7 @@ const App = () => {
 // for now we're fetching the same data twice - the idea is to fetch markers 
 // from one route and the lines from another
 
-{/*
-  const fetchLines = async() => {
-    try {
-      const response = await fetch("/allops");
-      const data = await response.json();
-      console.log("Fetching lines successful!");
-      const dataArr = data.map(el => [el.lat, el.long]);
-      console.log(dataArr);
-      setLines(dataArr);
-    } catch (err) {
-      console.log("There was a problem with backend connection");
-      return;
-    }
-  }
-*/}
+
 const fetchLines = async() => {
   try {
     const response = await fetch("/alllines");
@@ -91,14 +78,26 @@ const fetchLines = async() => {
     }
   }
 
+  const fetchConstruction = async() => {
+    try {
+      const response = await fetch("/allconstrs");
+      const data = await response.json();
+      console.log("Fetching construction sites successful!");
+      console.log(data);
+      setConstruct(data);
+    } catch (err) {
+      console.log("There was a problem with backend connection");
+      return;
+    }
+  };
+
   const fetchData = async() => {
     setLoading(true);
-    //await fetchMarkers();
+    await fetchMarkers();
     await fetchLines();
+    await fetchConstruction();
     setLoading(false)
-    const test = markers.filter(marker => marker.name === site);
-    console.log("Test filter")
-    console.log(test)
+
   }
   
 
@@ -111,14 +110,14 @@ const fetchLines = async() => {
     <Container>
     <Row>
       
-       <Col className="left-container"
+       {/*<Col className="left-container"
         xs={2}
         style={{backgroundColor:'#2F4989'}}>
-        </Col>
+      </Col>*/}
 
         <Col className="map-container" xs={7.8} style={{backgroundColor:"#e62b19"}}>
         <Searchbar fetchMarkers={fetchData} style={{color: "black"}}/>
-        <Map markers={markers} lines={lines} origin={origin} setSite={setSite} setSiteInfo={setSiteInfo} setActiveLine={setActiveLine} activeLine={activeLine} style={{width: "100%"}}/>
+        <Map markers={markers} lines={lines} origin={origin} setSite={setSite} setSiteInfo={setSiteInfo} setActiveLine={setActiveLine} activeLine={activeLine} construct={construct} style={{width: "100%"}}/>
         </Col>
 
         <Col xs={2} style={{backgroundColor:'#2F4989'}}>
