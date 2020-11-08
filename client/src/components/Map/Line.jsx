@@ -14,7 +14,7 @@ export const MapLine = ({ lines, setActiveLine, activeLine }) => {
             ]}
             color={"blue"}
             stroke={true}
-            opacity={0.5}
+            opacity={0.3}
             bubblingMouseEvents={false}
             weight={5}
             eventHandlers={{

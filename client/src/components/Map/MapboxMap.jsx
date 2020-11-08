@@ -132,7 +132,7 @@ export const Map = ({
                     lat: station.geometry.coordinates[1],
                     lng: station.geometry.coordinates[0],
                   }}
-                  fillColor="red"
+                  fillColor="#444444"
                   radius={rad}
                 >
                   <Popup>

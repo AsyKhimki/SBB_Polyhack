@@ -30,7 +30,7 @@ export const Searchbar = ({
       <nav className="navbar navbar-dark m-2" style={{ border: "5pt" }}>
         <button
           className="btn btn-outline-info my-sm-0"
-          style={{ color: "#e62b19", backgroundColor: "#2F4989" }}
+          style={{ color: "#e62b19", backgroundColor: "#EB0000" }}
           type="submit"
           backgroundColor="#2F4989"
           onClick={fetchMarkers}

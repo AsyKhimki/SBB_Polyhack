@@ -198,13 +198,13 @@ const fetchLines = async() => {
         style={{backgroundColor:'#2F4989'}}>
       </Col>*/}
 
-        <Col className="map-container" xs={7.8} style={{backgroundColor:"#e62b19"}}>
+        <Col className="map-container" xs={7.8} style={{backgroundColor:"#2d327d"}}>
         <Searchbar fetchMarkers={fetchData} startDate={startDate} setStartDate={setStartDate} numcnst={numcnst} showpo={showpo} setShowpo={setShowpo} showstat={showstat} setShowstat={setShowstat} style={{color: "black"}}/>
         <Map markers={markers} lines={lines} origin={origin} setSite={setSite}  setSiteInfo={setSiteInfo} setActiveLine={setActiveLine} activeLine={activeLine} construct={construct} problems={problems} startDate={startDate} setNumcnst={setNumcnst} showpo={showpo}
         stations={stations} showstat={showstat} style={{width: "100%"}}/>
         </Col>
 
-        <Col xs={3.2} style={{backgroundColor:'#2F4989'}}>
+        <Col xs={3.2} style={{backgroundColor:'#EB0000'}}>
           
           <div className="info-container">
           <h2><font color="white"><b>Current construction sites</b></font></h2>
