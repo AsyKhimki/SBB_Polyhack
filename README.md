@@ -1,7 +1,6 @@
 # SBB POLYHACK 2020 Challenge
-## Intelligent restriction detection
 
-
+![Test Image 1](asy_local.png)
 
 ### Installation
 Install all important packages for the `client`:
@@ -9,11 +8,6 @@ Install all important packages for the `client`:
 cd client
 npm init
 npm install
-```
-Packages for `server` (relies on Python > 3.7):
-```shell
-cd server
-pip install requirements.txt
 ```
 
 ### Running the application
