@@ -10,6 +10,11 @@ cd client
 npm init
 npm install
 ```
+Packages for `server` (relies on Python > 3.7):
+```shell
+cd server
+pip install requirements.txt
+```
 
 ### Running the application
 To start the application please follow these steps
