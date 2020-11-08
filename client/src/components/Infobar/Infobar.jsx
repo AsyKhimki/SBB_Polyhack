@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import sbb_train from './sbb_train.jpg'
 
-export const Infobar = ({ num, site_info } ) => {
+export const Infobar = ({ site_info } ) => {
 
   console.log("Infobar");
 
@@ -10,19 +10,30 @@ export const Infobar = ({ num, site_info } ) => {
       <div className="card m-4" style={{width: "15rem"}}>
        <img class="card-img-top" src={sbb_train} alt="Card image cap"/>
         <div className="card-body">
-          <h5 className="card-title">Construction site # {site_info.name}</h5>
+          <h5 className="card-title">Construction site {site_info.name}</h5>
 
           
-          <table style={{width:"13rem"}}>
+          <table style={{width:"14rem"}}>
             <tr>
-              <td>Latitude:</td>
-              <td>{site_info.lat.toFixed(3)}</td>
+              <td>From:</td>
+              <td>{site_info.date_from}</td>
             </tr>
 
             <tr>
-              <td>Longitude:</td>
-              <td>{site_info.long.toFixed(3)}</td>
+              <td>To:</td>
+              <td>{site_info.date_to}</td>
             </tr>
+
+            <tr>
+              <td>Capacity:</td>
+              <td>{site_info.cap_red}</td>
+            </tr>
+
+            <tr>
+              <td>Type:</td>
+              <td>{site_info.type}</td>
+            </tr>
+
           </table>
           
         </div>
@@ -30,3 +41,4 @@ export const Infobar = ({ num, site_info } ) => {
     </div>
   );
 };
+

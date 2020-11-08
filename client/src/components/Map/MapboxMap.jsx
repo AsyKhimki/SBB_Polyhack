@@ -22,6 +22,8 @@ export const Map = ({
   setActiveLine,
   activeLine,
   construct,
+  startDate,
+  setNumcnst,
 }) => {
   const sample_line = [
     {
@@ -54,7 +56,10 @@ export const Map = ({
     console.log(`Clicked at ${lat}, ${lng}`);
   };
 
+  var cnt = 0;
+
   return (
+
     <div>
       <MapContainer
         center={origin}
@@ -95,11 +100,18 @@ export const Map = ({
         </div>
 
         <div>
-          {construct.map((cnst) => {
-
-            console.log("Construction latitude");
-            console.log(cnst.ops[0].lat);
-            console.log(cnst)
+          {construct.filter( obj => {
+              var date_from = new Date(obj.date_from);
+              var date_to = new Date(obj.date_to);
+              console.log(date_from.getTime() > startDate.getTime() );
+              var ans = date_from.getTime() <= startDate.getTime() && date_to.getTime() >= startDate.getTime()
+              cnt = ans ? cnt + 1 : cnt ;
+              setNumcnst(cnt);
+              console.log("number of constructions")
+              console.log(cnt);
+              return ans
+          })
+          .map((cnst) => {
 
             return (
               <Polyline

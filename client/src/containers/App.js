@@ -3,6 +3,7 @@ import './App.css';
 import {Map} from '../components/Map/MapboxMap';
 import {Titlebar} from '../components/Titlebar/Titlebar';
 import {Infobar} from '../components/Infobar/Infobar';
+import {Infobars} from '../components/Infobar/Infobars';
 import {Searchbar} from '../components/Searchbar/Searchbar';
 import {Navbar} from '../components/Navbar/Navbar';
 import {MyForm} from '../components/Form/Form';
@@ -20,9 +21,11 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [lines, setLines] = useState([]);
   const [construct, setConstruct] = useState([]);
+  const [numcnst, setNumcnst] = useState(0);
   const [ops, setOps] = useState([]); // raw data from backend - to be removed later
   const [site, setSite] = useState("1");
-  const [siteInfo, setSiteInfo] = useState({'lat': 47.372406, 'long': 8.537606});
+  const [startDate, setStartDate] = useState(new Date());
+  const [siteInfo, setSiteInfo] = useState({date_from: "2017-06-30", date_to: "2027-12-30", cap_red: "0.25", type:"none"});
   const [activeLine, setActiveLine] = useState(undefined);
 
 // for now we're fetching the same data twice - the idea is to fetch markers 
@@ -100,13 +103,14 @@ const fetchLines = async() => {
 
   }
   
+  
 
   return ( 
     <div>
       {loading ? <div>Loading</div> : 
     
     <div>
-    <Titlebar text={"Find the Bootleneck"}/> 
+    <Titlebar text={"Intelligent\nrestriction detection"}/> 
     <Container>
     <Row>
       
@@ -116,15 +120,19 @@ const fetchLines = async() => {
       </Col>*/}
 
         <Col className="map-container" xs={7.8} style={{backgroundColor:"#e62b19"}}>
-        <Searchbar fetchMarkers={fetchData} style={{color: "black"}}/>
-        <Map markers={markers} lines={lines} origin={origin} setSite={setSite} setSiteInfo={setSiteInfo} setActiveLine={setActiveLine} activeLine={activeLine} construct={construct} style={{width: "100%"}}/>
+        <Searchbar fetchMarkers={fetchData} startDate={startDate} setStartDate={setStartDate} numcnst={numcnst} style={{color: "black"}}/>
+        <Map markers={markers} lines={lines} origin={origin} setSite={setSite}  setSiteInfo={setSiteInfo} setActiveLine={setActiveLine} activeLine={activeLine} construct={construct} startDate={startDate} setNumcnst={setNumcnst} style={{width: "100%"}}/>
         </Col>
 
-        <Col xs={2} style={{backgroundColor:'#2F4989'}}>
+        <Col xs={3.2} style={{backgroundColor:'#2F4989'}}>
+          
           <div className="info-container" style={{backgroundColor:'#2F4989', width: "18rem", height:"400pt", border:"none"}}>
-              <Infobar num={site} site_info={siteInfo}  />
-              <Infobar num={site} site_info={siteInfo} />
+          <h2>Current construction sites</h2>
+              
+             
+              <Infobars construct={construct} startDate={startDate}/>
               {/*<Infobar num={3, "18rem"}/>
+              <Infobar site_info={siteInfo}  />
               <Infobar num={4, "18rem"}/>
               <Infobar num={5, "18rem"}/>
               <Infobar num={6, "18rem"}/>*/}

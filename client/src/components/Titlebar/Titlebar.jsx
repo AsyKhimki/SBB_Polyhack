@@ -16,9 +16,11 @@ export const Titlebar = ( {text} ) => {
   return (
     <div>
       <nav className="navbar navbar-light bg-light titlebar" style={mystyle}>
-       <img src={sbb} alt="House image" height={70} width={300} />
-        <span className="navbar-brand mb-0 h1"> {text} </span>
-        <img src={polyhack} alt="House image" height={70} width={300} />
+       <img src={sbb} alt="House image" height={40} width={200} />
+        {/* <span className="navbar-brand mb-0 h1"> {text} </span>*/}
+        <h1>{text}</h1>
+
+        <img src={polyhack} alt="House image" height={40} width={200} />
       </nav>  
     </div>
   );
