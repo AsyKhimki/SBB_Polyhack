@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Polyline, Circle } from "react-leaflet";
+import { Polyline, Circle, Popup } from "react-leaflet";
 
 export const MapLine = ({ lines, setActiveLine, activeLine }) => {
   return (
@@ -83,17 +83,19 @@ export const MapConstrLine = ({ construct }) => {
         operatingLines.map(({ segment }) =>
           segment.map((seg) => {
             return (
-              <Polyline
-                positions={[
-                  [seg.opFrom.lat, seg.opFrom.long],
-                  [seg.opTo.lat, seg.opTo.long],
-                ]}
-                color={"red"}
-                stroke={true}
-                opacity={0.25}
-                bubblingMouseEvents={false}
-                weight={10}
-              />
+              <div>
+                <Polyline
+                  positions={[
+                    [seg.opFrom.lat, seg.opFrom.long],
+                    [seg.opTo.lat, seg.opTo.long],
+                  ]}
+                  color={"red"}
+                  stroke={true}
+                  opacity={0.25}
+                  bubblingMouseEvents={false}
+                  weight={10}
+                />
+              </div>
             );
           })
         )
@@ -109,10 +111,18 @@ export const MapConstrPoint = ({ construct }) => {
         operatingPoints.map(({ point }) => {
           return (
             <Circle
-              center={{ lat: point.lat, lng: point.long }}
+              center={{
+                lat: point.lat,
+                lng: point.long,
+              }}
               fillColor="red"
               radius={3000}
-            />
+            >
+              <Popup>
+                <b>{point.name} </b> <br />
+                <p>{point.abbreviation}</p>
+              </Popup>
+            </Circle>
           );
         })
       )}
