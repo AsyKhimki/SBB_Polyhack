@@ -10,10 +10,20 @@ def get(tbl_name, columns=None, filters=None):
     else:
         columns = ', '.join(columns)
     sql = f'SELECT {columns} FROM {tbl_name};'
+    filter_list = []
     if filters is not None:
-        raise NotImplementedError()
+        sql = sql[:-1] + ' WHERE '
+        placeholders = [f'{filter[0]} {filter[1]} ? {filter[3]}' for filter in filters]
+        placeholders.pop()
+        placeholders.append(f'{filters[-1][0]} {filters[-1][1]} ?')
+        sql = sql + ' '.join(placeholders) + ';'
+        for col, op, val, con in filters:
+            filter_list.append(val)
     with DatabaseCursor(FILE) as cursor:
-        cursor.execute(sql)
+        if filter_list:
+            cursor.execute(sql, filter_list)
+        else:
+            cursor.execute(sql)
         rows = cursor.fetchall()
     return rows
 
@@ -45,45 +55,32 @@ class DatabaseCursor:
 
 if __name__ == '__main__':
     import json
-    constr_file = Path('.') / 'data' / 'construction-site.json'
+    constr_file = Path('.') / 'data' / 'zugzahlen.json'
     with open(constr_file, mode='r') as read_file:
         constr_data = json.load(read_file)
     print(constr_data[10]['fields'])
     constrs = []
-    constrs_ops = []
     ops = get('ops', ('id', 'abbr'))
     ops = {row[1]: row[0] for row in ops}
     id = 0
     constr_ops_id = 0
     for element in constr_data:
         data = element['fields']
-        if data.get('bp_to') is not None and data.get('bp_from') is not None:
-            if data.get('bp_to') in ops and data.get('bp_from') in ops:
-                constrs.append((id, data['region'], data.get('nom_du_project_projektbezeichnung'), 
-                            data.get('bemerkungen'), data.get('date_from'), data.get('date_to'), data.get('weeks'), data.get('reduction_capacity'),
-                            data.get('umsetzung_intervalltyp_umleitung')))
-                constrs_ops.append(((constr_ops_id, id, data.get('bp_from'), 0)))
-                constr_ops_id += 1
-                constrs_ops.append((constr_ops_id, id, data.get('bp_to'), 1))
+        if data.get('bp_bis_abschnitt') is not None and data.get('bp_von_abschnitt') is not None:
+            if data.get('bp_bis_abschnitt') in ops and data.get('bp_von_abschnitt') in ops:
+                constrs.append((id, data['in_richtung'], data.get('geschaeftscode'),
+                            data.get('anzahl_zuege'), data.get('bp_von_abschnitt'), data.get('bp_bis_abschnitt')))
                 id += 1
-                constr_ops_id += 1
-    new_constrs_ops = []
-    for op in constrs_ops:
-        new_constrs_ops.append((op[0], op[1], ops[op[2]], op[3]))
+    new_constrs = []
+    for op in constrs:
+        new_constrs.append((op[0], op[1], op[2], op[3], ops[op[4]], ops[op[5]]))
     
-    constrs_ops = new_constrs_ops
+    constrs = new_constrs
     with DatabaseCursor(FILE) as cursor:
-        sql = ('DROP TABLE IF EXISTS constr_ops;')
+        sql = ('DROP TABLE IF EXISTS capacities;')
         cursor.execute(sql)
-        sql = ("CREATE TABLE IF NOT EXISTS constr (id INT PRIMARY KEY, "
-               "region TEXT, project TEXT, comments TEXT, date_from DATETIME, date_to DATETIME, weeks INT, red_cap REAL, type TEXT);")
+        sql = ("CREATE TABLE IF NOT EXISTS capacities (id INT PRIMARY KEY, "
+               "direction BOOL, train_type TEXT, train_number REAL, op_from_id INT, op_to_id INT);")
         cursor.execute(sql)
-        sql = ("CREATE INDEX IF NOT EXISTS dates ON constr(date_from, date_to);")
-        cursor.execute(sql)
-        sql = ("CREATE TABLE IF NOT EXISTS constr_ops (id INT PRIMARY KEY, "
-               "constr_id INT, op_id INT, sorting INT);")
-        cursor.execute(sql)
-        sql = ("INSERT OR IGNORE INTO constr (id, region, project, comments, date_from, date_to, weeks, red_cap, type) VALUES (?,?,?,?,?,?,?,?,?);")
+        sql = ("INSERT OR IGNORE INTO capacities (id, direction, train_type, train_number, op_from_id, op_to_id) VALUES (?,?,?,?,?,?);")
         cursor.executemany(sql, constrs)
-        sql = ("INSERT OR IGNORE INTO constr_ops (id, constr_id, op_id, sorting) VALUES (?,?,?,?);")
-        cursor.executemany(sql, constrs_ops)
