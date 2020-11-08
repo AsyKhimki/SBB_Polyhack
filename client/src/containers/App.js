@@ -63,6 +63,7 @@ const fetchLines = async() => {
     console.log(dataArr);
     setLines(dataArr);
     setOps(data);
+    await fetchConstruction(data, dataArr);
   } catch (err) {
     console.log("There was a problem with backend connection");
     return;
@@ -82,12 +83,44 @@ const fetchLines = async() => {
     }
   }
 
-  const fetchConstruction = async() => {
+  const fetchConstruction = async(points, lines) => {
     try {
       const response = await fetch("/allconstrs");
       const data = await response.json();
       console.log("Fetching construction sites successful!");
       console.log(data);
+      // construction sites to lines
+      for (let consIdx = 0; consIdx < data.length; consIdx++) {
+        let operatingLines = [];
+        let operatingPoints = [];
+        let opFirst = data[consIdx].ops[0]; // starting point of constr site
+        let opSecond = data[consIdx].ops[1]; // ending point of constr site
+        // opLines: lines which are on either of the endpoints
+        let opLines = points.filter((l) => {return l.ops.some((op) => {return op.abbreviation === opFirst.abbreviation || op.abbreviation === opSecond.abbreviation})});
+        let abbrs = opLines.map((l) => {return l.ops.map(op => op.abbreviation)});
+        for (let lineIndex = 0; lineIndex < opLines.length; lineIndex++) {
+          let firstIndex = abbrs[lineIndex].indexOf(opFirst.abbreviation);
+          let secondIndex = abbrs[lineIndex].indexOf(opSecond.abbreviation);
+          // make sure that both endpoints are on the same line
+          if ( firstIndex !== -1 &&  secondIndex !== -1) {
+            let indices = (firstIndex < secondIndex) ? [firstIndex, secondIndex] : [secondIndex, firstIndex];
+            let lineInfo = {
+              name: opLines[lineIndex].name,
+              lnumber: opLines[lineIndex].lnumber,
+            }
+            // lines need to be displayed differently than points
+            if (indices[0] === indices[1]) {
+              lineInfo.point = opLines[lineIndex].ops[indices[0]];
+              operatingPoints.push(lineInfo);
+            } else {
+              lineInfo.segment = lines.filter((l) => l.lnumber == lineInfo.lnumber).slice(indices[0], indices[1]);
+              operatingLines.push(lineInfo);
+            }
+          }
+        }
+        data[consIdx].operatingLines = operatingLines;
+        data[consIdx].operatingPoints = operatingPoints;
+      }
       setConstruct(data);
     } catch (err) {
       console.log("There was a problem with backend connection");
@@ -99,7 +132,6 @@ const fetchLines = async() => {
     setLoading(true);
     await fetchMarkers();
     await fetchLines();
-    await fetchConstruction();
     setLoading(false)
 
   }

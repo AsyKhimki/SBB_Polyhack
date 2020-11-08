@@ -9,9 +9,8 @@ import {
   Circle,
 } from "react-leaflet";
 import { opacityById, weightById, colorById } from "./stylize_elements.js";
-import { MapLine, MapActiveLine } from "./Line";
+import { MapLine, MapActiveLine, MapConstrLine, MapConstrPoint } from "./Line";
 import { act } from "react-dom/test-utils";
-
 
 export const Map = ({
   markers,
@@ -59,10 +58,9 @@ export const Map = ({
 
   var cnt = 0;
 
-  console.log({showpo});
+  console.log({ showpo });
 
   return (
-
     <div>
       <MapContainer
         center={origin}
@@ -75,37 +73,54 @@ export const Map = ({
           url="https://api.mapbox.com/styles/v1/beta-sheet/ckh6dba8002u21aob78yl7tep/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmV0YS1zaGVldCIsImEiOiJja2g2ZG5hN3QwYzlyMnJxY3hrYmtybHZqIn0.SEa-JVt3EsXaPGgx-4mnYA"
         />
 
-
-        { showpo ? 
+        {showpo ? (
           <div>
-          {markers.map((marker) => {
-
-            return(
-              <Circle
-                center={{ lat: marker.lat, lng: marker.long }}
-                fillColor="green"
-                radius={1000}
-
-                eventHandlers={{
-                  click: (  ) => {
-                    // console.log("Circle Has been clicked")
-                    console.log("Print lines")
-                    console.log(lines)
-                    console.log("Print construction sites")
-                    console.log(construct)
-                    setSite(marker.name)
-                    const test = markers.filter(x => x.name === marker.name);
-                    setSiteInfo(test[0])
-                  },
-                }}
+            {markers.map((marker) => {
+              return (
+                <Circle
+                  center={{ lat: marker.lat, lng: marker.long }}
+                  fillColor="green"
+                  radius={1000}
+                  eventHandlers={{
+                    click: () => {
+                      // console.log("Circle Has been clicked")
+                      console.log("Print lines");
+                      console.log(lines);
+                      console.log("Print construction sites");
+                      console.log(construct);
+                      setSite(marker.name);
+                      const test = markers.filter(
+                        (x) => x.name === marker.name
+                      );
+                      setSiteInfo(test[0]);
+                    },
+                  }}
                 />
-            );
-          })}
+              );
+            })}
+          </div>
+        ) : null}
 
-        </div>  : null }
-        
+        {
+          <MapConstrLine
+            construct={construct.filter((obj) => {
+              var date_from = new Date(obj.date_from);
+              var date_to = new Date(obj.date_to);
+              //console.log(date_from.getTime() > startDate.getTime() );
+              var ans =
+                date_from.getTime() <= startDate.getTime() &&
+                date_to.getTime() >= startDate.getTime();
+              cnt = ans ? cnt + 1 : cnt;
+              setNumcnst(cnt);
+              //console.log("number of constructions")
+              //console.log(cnt);
+              console.log(ans);
+              return ans;
+            })}
+          />
+        }
 
-        <div>
+        {/*      <div>
           {construct.filter( obj => {
               var date_from = new Date(obj.date_from);
               var date_to = new Date(obj.date_to);
@@ -137,8 +152,7 @@ export const Map = ({
             
           })}
 
-        </div>
-
+        </div> */}
 
         <Marker position={[47.372406, 8.537606]}>
           <Popup>

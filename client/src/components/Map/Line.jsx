@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Polyline } from "react-leaflet";
+import { Polyline, Circle } from "react-leaflet";
 
 export const MapLine = ({ lines, setActiveLine, activeLine }) => {
   return (
@@ -50,6 +50,57 @@ export const MapActiveLine = ({ activeLine }) => {
           />
         );
       })}
+    </div>
+  );
+};
+
+export const MapConstrLine = ({ construct }) => {
+  return (
+    <div>
+      {construct.map(({ operatingLines }) =>
+        operatingLines.map(({ segment }) =>
+          segment.map((seg) => {
+            return (
+              <Polyline
+                positions={[
+                  [seg.opFrom.lat, seg.opFrom.long],
+                  [seg.opTo.lat, seg.opTo.long],
+                ]}
+                color={"red"}
+                stroke={true}
+                opacity={0.25}
+                bubblingMouseEvents={false}
+                weight={10}
+              />
+            );
+          })
+        )
+      )}
+    </div>
+  );
+};
+
+export const MapConstrPoint = ({ construct }) => {
+  return (
+    <div>
+      {construct.map(({ operatingPoints }) =>
+        operatingPoints.map(({ point }) =>
+          point.map((pt) => {
+            return (
+              <Circle
+                eventHandlers={{
+                  click: () => {
+                    console.log("circle clicked");
+                  },
+                }}
+                center={{ lat: pt.lat, lng: pt.long }}
+                fillColor="red"
+                radius={1000}
+              />
+            );
+          })
+        )
+      )}
     </div>
   );
 };
