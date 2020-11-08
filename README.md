@@ -1,6 +1,6 @@
 # SBB POLYHACK 2020 Challenge
 
-![Test Image 1](asy_local.png)
+![Test Image 1](beta_screenshot.png)
 
 ### Installation
 Install all important packages for the `client`:
