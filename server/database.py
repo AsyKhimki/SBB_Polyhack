@@ -54,33 +54,5 @@ class DatabaseCursor:
 
 
 if __name__ == '__main__':
-    import json
-    constr_file = Path('.') / 'data' / 'zugzahlen.json'
-    with open(constr_file, mode='r') as read_file:
-        constr_data = json.load(read_file)
-    print(constr_data[10]['fields'])
-    constrs = []
-    ops = get('ops', ('id', 'abbr'))
-    ops = {row[1]: row[0] for row in ops}
-    id = 0
-    constr_ops_id = 0
-    for element in constr_data:
-        data = element['fields']
-        if data.get('bp_bis_abschnitt') is not None and data.get('bp_von_abschnitt') is not None:
-            if data.get('bp_bis_abschnitt') in ops and data.get('bp_von_abschnitt') in ops:
-                constrs.append((id, data['in_richtung'], data.get('geschaeftscode'),
-                            data.get('anzahl_zuege'), data.get('bp_von_abschnitt'), data.get('bp_bis_abschnitt')))
-                id += 1
-    new_constrs = []
-    for op in constrs:
-        new_constrs.append((op[0], op[1], op[2], op[3], ops[op[4]], ops[op[5]]))
-    
-    constrs = new_constrs
-    with DatabaseCursor(FILE) as cursor:
-        sql = ('DROP TABLE IF EXISTS capacities;')
-        cursor.execute(sql)
-        sql = ("CREATE TABLE IF NOT EXISTS capacities (id INT PRIMARY KEY, "
-               "direction BOOL, train_type TEXT, train_number REAL, op_from_id INT, op_to_id INT);")
-        cursor.execute(sql)
-        sql = ("INSERT OR IGNORE INTO capacities (id, direction, train_type, train_number, op_from_id, op_to_id) VALUES (?,?,?,?,?,?);")
-        cursor.executemany(sql, constrs)
+    print('Careful!')
+    exit()
