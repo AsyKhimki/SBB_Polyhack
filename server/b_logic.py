@@ -68,3 +68,23 @@ def all_constructions():
             }
         )
     return [value for value in constr_dict.values()]
+    
+
+def all_problem_zones():
+    """dirty one for now"""
+    rows = db.get('problem_zones', ('id', 'type', 'date_from', 'date_to'))
+    problem_dict = {row[0]: {'type': row[1], 'date_from': row[2], 'date_to': row[3], 'ops': []} for row in rows}
+    sql = 'SELECT problem_zone_id, op_id, abbr, name, lat, long, didok, sorting FROM ops INNER JOIN ops_problem_zones ON ops.id = ops_problem_zones.op_id ORDER BY problem_zone_id, sorting;'
+
+    rows = db.join_get(sql)
+    for row in rows:
+        problem_dict[row[0]]['ops'].append(
+            {
+                'abbreviation': row[1],
+                'name': row[2],
+                'lat': row[3],
+                'long': row[4],
+                'didok': row[5]
+            }
+        )
+    return [value for value in problem_dict.values()]

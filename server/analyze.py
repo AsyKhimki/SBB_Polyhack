@@ -4,7 +4,7 @@ import json
 import sqlite3
 from pathlib import Path
 FILE = Path('.') / 'server' / 'data.db'
-import server.database as db
+import database as db
 
 def all_constructions():
     """dirty one for now"""
@@ -162,6 +162,41 @@ for constructionInfo in constructionInfoList:
             if delayTime >= 3:
                 problemStationPairListPerson.append((key[0],key[1],constructionTimeFrom,constructionTimeTo))
 
-print(problemStationPairListPerson)
-print(problemStationPairListGood)
-print(problemStationPairListUmsetzung)
+# print(len(problemStationPairListPerson))
+# print(len(problemStationPairListGood))
+# print(len(problemStationPairListUmsetzung))
+def insert_problem_zones(cursor, type, problem_zones, pz_id, pz_ops_id):
+    pz_tbl = []
+    pz_ops_tbl = []
+    for problem_zone in problem_zones:
+        pz_tbl.append((pz_id, type, problem_zone[2], problem_zone[3]))
+        pz_ops_tbl.append((pz_ops_id, pz_id, problem_zone[0], 0))
+        pz_ops_id += 1
+        pz_ops_tbl.append((pz_ops_id, pz_id, problem_zone[1], 1))
+        pz_ops_id += 1
+        pz_id += 1
+    sql = 'INSERT INTO problem_zones (id, type, date_from, date_to) VALUES (?, ?, ?, ?);'
+    cursor.executemany(sql, pz_tbl)
+    sql = 'INSERT INTO ops_problem_zones (id, problem_zone_id, op_id, sorting) VALUES (?, ?, ?, ?);'
+    cursor.executemany(sql, pz_ops_tbl)
+    return pz_id, pz_ops_id
+
+        
+# Add it to the database to temporary tables
+with db.DatabaseCursor(FILE) as cursor:
+    sql = "DROP TABLE IF EXISTS problem_zones;"
+    cursor.execute(sql)
+    sql =  "DROP TABLE IF EXISTS ops_problem_zones;"
+    cursor.execute(sql)
+    sql = ("CREATE TABLE problem_zones (id INT PRIMARY KEY, "
+            "type TEXT, date_from datetime, date_to datetime)")
+    cursor.execute(sql)
+    sql = ("CREATE TABLE ops_problem_zones (id INT PRIMARY KEY, "
+           "problem_zone_id INT, op_id INT, sorting INT)")
+    cursor.execute(sql)
+    pz_id, pz_ops_id = insert_problem_zones(cursor, 'Personenwagen', problemStationPairListPerson, 0, 0)
+    print(pz_id)
+    pz_id, pz_ops_id = insert_problem_zones(cursor, 'Gueterwagen', problemStationPairListGood, pz_id, pz_ops_id)
+    print(pz_id)
+    pz_id, pz_ops_id = insert_problem_zones(cursor, 'Umsetzung', problemStationPairListUmsetzung, pz_id, pz_ops_id)
+    
