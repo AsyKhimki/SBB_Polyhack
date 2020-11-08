@@ -3,7 +3,20 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export const Searchbar = ({ fetchMarkers, startDate, setStartDate, numcnst, }) => {
+export const Searchbar = 
+({ fetchMarkers, 
+    startDate, 
+    setStartDate, 
+    numcnst, 
+    showpo,
+    setShowpo,  }) => {
+
+
+  const handleInputChange = (event) => {
+    const target = event.target;
+    setShowpo(target.checked);
+  };
+
   return (
     <div>
 
@@ -57,6 +70,21 @@ export const Searchbar = ({ fetchMarkers, startDate, setStartDate, numcnst, }) =
           </label>
         
       </nav>
+
+      <nav className="navbar navbar-dark m-2">
+
+          <label className="form-check-label" for="defaultCheck1" style={{color: "black"}}>
+            Show operation points
+            <input
+              className="form-check-input m-2"
+              type="checkbox"
+              value={showpo}
+              onChange={handleInputChange}
+              id="defaultCheck1"
+          />
+          </label>
+        </nav>
+
     </div>
   );
 };

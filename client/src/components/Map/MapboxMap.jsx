@@ -24,6 +24,7 @@ export const Map = ({
   construct,
   startDate,
   setNumcnst,
+  showpo,
 }) => {
   const sample_line = [
     {
@@ -58,6 +59,8 @@ export const Map = ({
 
   var cnt = 0;
 
+  console.log({showpo});
+
   return (
 
     <div>
@@ -72,6 +75,8 @@ export const Map = ({
           url="https://api.mapbox.com/styles/v1/beta-sheet/ckh6dba8002u21aob78yl7tep/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmV0YS1zaGVldCIsImEiOiJja2g2ZG5hN3QwYzlyMnJxY3hrYmtybHZqIn0.SEa-JVt3EsXaPGgx-4mnYA"
         />
 
+
+        { showpo ? 
           <div>
           {markers.map((marker) => {
 
@@ -97,18 +102,19 @@ export const Map = ({
             );
           })}
 
-        </div>
+        </div>  : null }
+        
 
         <div>
           {construct.filter( obj => {
               var date_from = new Date(obj.date_from);
               var date_to = new Date(obj.date_to);
-              console.log(date_from.getTime() > startDate.getTime() );
+              //console.log(date_from.getTime() > startDate.getTime() );
               var ans = date_from.getTime() <= startDate.getTime() && date_to.getTime() >= startDate.getTime()
               cnt = ans ? cnt + 1 : cnt ;
               setNumcnst(cnt);
-              console.log("number of constructions")
-              console.log(cnt);
+              //console.log("number of constructions")
+              //console.log(cnt);
               return ans
           })
           .map((cnst) => {
