@@ -1,10 +1,31 @@
-# SBB POLYHACK 2020 Challenge# SBB_Polyhack
+# SBB POLYHACK 2020 Challenge
 
+![Test Image 1](asy_local.png)
+
+### Installation
+Install all important packages for the `client`:
+```shell
+cd client
+npm init
+npm install
+```
+Install important packages for `server`:
+```shell
+cd server
+pip install requirements.txt
+```
+
+### Running the application
 To start the application please follow these steps
 
-1. Start the server in the first terminal window by running from the root directory
-`python server/app.py`
+1. Open the first tab in the root directory and run
 
-2. Start the client in the second terminal window 
-    * go to `SBB_Polyhack/client`
-    * run `npm start`
+```shell 
+python server/app.py
+```
+
+2. Open the second tab in the root directory and run
+```shell
+cd SBB_Polyhack/client
+npm start
+```
