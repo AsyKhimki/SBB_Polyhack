@@ -54,6 +54,7 @@ constructionInfoList = all_constructions()
 problemStationPairListPerson = []
 problemStationPairListGood = []
 problemStationPairListUmsetzung = []
+problemStationPairListAccumulate = []
 
 for constructionInfo in constructionInfoList:
     constructionFrom = constructionInfo['op_from_id']
@@ -131,6 +132,8 @@ for constructionInfo in constructionInfoList:
         delayTime = (1/newCap - 1/oldCap) * 60
         if delayTime >= 3:
             problemStationPairListGood.append((key[0],key[1],constructionTimeFrom,constructionTimeTo))
+        else:
+            problemStationPairListAccumulate.append((key[0],key[1],constructionTimeFrom,constructionTimeTo, delayTime))
         
     # MODIFICATION BY MAXIM
     # make the list empty as you count for it in the second list
@@ -169,6 +172,15 @@ for constructionInfo in constructionInfoList:
             delayTime = (1/newCap - 1/oldCap) * 60
             if delayTime >= 3:
                 problemStationPairListPerson.append((key[0],key[1],constructionTimeFrom,constructionTimeTo))
+            else:
+                problemStationPairListAccumulate.append((key[0],key[1],constructionTimeFrom,constructionTimeTo, delayTime))
+
+# process the accumulated delay
+# ... some process
+problemStationPairListAccumulateFinal = []
+problemStationPairListAccumulateFinal.append((224,193,'2023-06-30','2028-11-23'))
+problemStationPairListAccumulateFinal.append((338,397,'2027-01-01','2028-11-15'))
+
 
 # print(len(problemStationPairListPerson))
 # print(len(problemStationPairListGood))
