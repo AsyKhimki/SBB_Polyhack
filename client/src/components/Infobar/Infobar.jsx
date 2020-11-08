@@ -53,7 +53,9 @@ export const Infobar = ({ site_info }) => {
 
             {site_info.operatingPoints.length > 0 && (
               <tr>
-                <td align="left">Affected lines:</td>
+                <td align="left">
+                  <b>Affected lines:</b>
+                </td>
                 {site_info.operatingPoints.map((op) => {
                   return <td align="right">{op.name}</td>;
                 })}
