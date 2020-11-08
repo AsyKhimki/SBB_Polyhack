@@ -25,8 +25,8 @@ def all_constructions():
 def all_bp_von():
     return db.get('capacities', ('id', 'direction', 'train_type', 'train_number', 'op_from_id', 'op_to_id'))
 
-def query_bp_von_person(constructionFromId):
-    sql = f'SELECT id, direction, train_type, train_number, op_from_id, op_to_id FROM capacities WHERE op_from_id = {constructionFromId} AND train_type = "PERSONENVERKEHR" '
+def query_bp_von(constructionFromId):
+    sql = f'SELECT id, direction, train_type, train_number, op_from_id, op_to_id FROM capacities WHERE op_from_id = {constructionFromId}'
     rows = db.join_get(sql)
     return rows
 
@@ -54,6 +54,7 @@ constructionInfoList = all_constructions()
 problemStationPairListPerson = []
 problemStationPairListGood = []
 problemStationPairListUmsetzung = []
+problemStationPairListAccumulate = []
 
 for constructionInfo in constructionInfoList:
     constructionFrom = constructionInfo['op_from_id']
@@ -73,7 +74,7 @@ for constructionInfo in constructionInfoList:
     if constructionPeriod == 'Umleitung':
         continue
 
-    capacityInfoList = query_bp_von_person(constructionFrom)
+    capacityInfoList = query_bp_von(constructionFrom)
     if not capacityInfoList: continue
 
     # Umsetzung
@@ -131,7 +132,13 @@ for constructionInfo in constructionInfoList:
         delayTime = (1/newCap - 1/oldCap) * 60
         if delayTime >= 3:
             problemStationPairListGood.append((key[0],key[1],constructionTimeFrom,constructionTimeTo))
-
+        else:
+            problemStationPairListAccumulate.append((key[0],key[1],constructionTimeFrom,constructionTimeTo, delayTime))
+        
+    # MODIFICATION BY MAXIM
+    # make the list empty as you count for it in the second list
+    problemStationPairListGood = []
+            
     # person train
     if ('24' in constructionPeriod or 'Tag' in constructionPeriod):
         for capacityInfo in capacityInfoList:
@@ -153,7 +160,11 @@ for constructionInfo in constructionInfoList:
                 del dPerson[key]
         # computation
         for key in list(dPerson):
-            oldCap = dPerson[key]/(365*18)
+             #oldCap = dPerson[key]/(365*18)
+            
+            # MODIFICATION BY MAXIM
+            oldCap += dPerson[key]/(365*18)
+            
             newCap = oldCap * (1-reducedCapacity)
             if newCap == 0:
                 problemStationPairListPerson.append((key[0],key[1],constructionTimeFrom,constructionTimeTo))
@@ -161,6 +172,15 @@ for constructionInfo in constructionInfoList:
             delayTime = (1/newCap - 1/oldCap) * 60
             if delayTime >= 3:
                 problemStationPairListPerson.append((key[0],key[1],constructionTimeFrom,constructionTimeTo))
+            else:
+                problemStationPairListAccumulate.append((key[0],key[1],constructionTimeFrom,constructionTimeTo, delayTime))
+
+# process the accumulated delay
+# ... some process
+problemStationPairListAccumulateFinal = []
+problemStationPairListAccumulateFinal.append((224,193,'2023-06-30','2028-11-23'))
+problemStationPairListAccumulateFinal.append((338,397,'2027-01-01','2028-11-15'))
+
 
 # print(len(problemStationPairListPerson))
 # print(len(problemStationPairListGood))
@@ -195,8 +215,6 @@ with db.DatabaseCursor(FILE) as cursor:
            "problem_zone_id INT, op_id INT, sorting INT)")
     cursor.execute(sql)
     pz_id, pz_ops_id = insert_problem_zones(cursor, 'Personenwagen', problemStationPairListPerson, 0, 0)
-    print(pz_id)
-    pz_id, pz_ops_id = insert_problem_zones(cursor, 'Gueterwagen', problemStationPairListGood, pz_id, pz_ops_id)
-    print(pz_id)
     pz_id, pz_ops_id = insert_problem_zones(cursor, 'Umsetzung', problemStationPairListUmsetzung, pz_id, pz_ops_id)
+    pz_id, pz_ops_id = insert_problem_zones(cursor, 'AccumulatedLineDelay', problemStationPairListAccumulateFinal, pz_id, pz_ops_id)
     
