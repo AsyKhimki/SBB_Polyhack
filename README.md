@@ -9,6 +9,11 @@ cd client
 npm init
 npm install
 ```
+Install important packages for `server`:
+```shell
+cd server
+pip install requirements.txt
+```
 
 ### Running the application
 To start the application please follow these steps
